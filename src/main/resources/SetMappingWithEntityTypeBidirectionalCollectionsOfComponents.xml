@@ -3,7 +3,7 @@
         "-//Hibernate/Hibernate Mapping DTD//EN"
         "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <hibernate-mapping default-access="field">
-    <class name="com.examples.xml.SetMappingWithEntityTypeBidirectionalCollectionsOfComponents$Item" table="ITEM">
+    <class name="com.examples.xml.SetMappingWithEntityTypeBidirectionalCollectionsOfComponentsTBC$Item" table="ITEM">
         <id name="itemId" column="ITEM_ID" type="int">
             <generator class="sequence">
                 <param name="sequence">seq</param>
@@ -14,7 +14,7 @@
 
         <set name="images" table="ITEM_IMAGE">
             <key column="ITEM_ID"/>
-            <composite-element class="com.examples.xml.SetMappingWithEntityTypeBidirectionalCollectionsOfComponents$ItemImage" >
+            <composite-element class="com.examples.xml.SetMappingWithEntityTypeBidirectionalCollectionsOfComponentsTBC$ItemImage" >
                 <parent name="item"/>
                 <property name="fileName" column="FILENAME" not-null="true"/>
                 <property name="x" column="X" not-null="true"/>
@@ -22,7 +22,7 @@
             </composite-element>
         </set>
     </class>
-    <!--<class name="com.examples.xml.SetMappingWithEntityTypeBidirectionalCollectionsOfComponents$ItemImage" table="ITEM_IMAGE">-->
+    <!--<class name="com.examples.xml.SetMappingWithEntityTypeBidirectionalCollectionsOfComponentsTBC$ItemImage" table="ITEM_IMAGE">-->
         <!--<id name="itemId" column="ITEM_ID" type="int"/>-->
         <!--<property name="fileName" column="FILENAME" not-null="true"/>-->
         <!--<property name="x" column="X" not-null="true"/>-->

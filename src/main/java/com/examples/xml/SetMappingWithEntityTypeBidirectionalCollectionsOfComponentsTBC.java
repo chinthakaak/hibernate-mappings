@@ -1,6 +1,5 @@
 package com.examples.xml;
 
-import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -8,14 +7,13 @@ import org.hibernate.cfg.AnnotationConfiguration;
 import org.hibernate.cfg.Environment;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 /**
  * Created by ka40215 on 11/22/15.
  * Incomplete
  */
-public class SetMappingWithEntityTypeBidirectionalCollectionsOfComponents {
+public class SetMappingWithEntityTypeBidirectionalCollectionsOfComponentsTBC {
     public static void main(String[] args) throws InterruptedException {
         Session session = HibernateUtil.buildSessionFactory().openSession();
         Transaction transaction = session.beginTransaction();
