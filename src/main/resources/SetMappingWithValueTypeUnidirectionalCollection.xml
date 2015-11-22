@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping default-access="field">
+    <class name="com.examples.xml.SetMappingWithValueTypeUnidirectionalCollection$Item" table="ITEM">
+        <id name="itemId" column="ITEM_ID" type="int">
+            <generator class="sequence">
+                <param name="sequence">seq</param>
+            </generator>
+        </id>
+
+        <property name="itemName" column="NAME" type="string"/>
+
+        <set name="images" table="ITEM_IMAGE">
+            <key column="ITEM_ID"/>
+            <element column="FILENAME" type="string" not-null="true"/>
+        </set>
+    </class>
+    <class name="com.examples.xml.SetMappingWithValueTypeUnidirectionalCollection$ItemImage" table="ITEM_IMAGE">
+        <id name="itemId" column="ITEM_ID" type="int"/>
+
+        <property name="fileName" column="FILENAME" type="string"/>
+    </class>
+</hibernate-mapping>
