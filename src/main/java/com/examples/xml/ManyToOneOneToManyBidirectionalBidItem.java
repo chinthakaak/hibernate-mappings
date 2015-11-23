@@ -12,9 +12,11 @@ import java.util.Set;
 /**
  * Created by ka40215 on 11/22/15.
  */
-public class ManyToOneOneToManyBidirectionalBidItemTBC {
+public class ManyToOneOneToManyBidirectionalBidItem {
     public static void main(String[] args) {
-        Session session = HibernateUtil.buildSessionFactory().openSession();
+        // ############ Test 1 ###########
+        // This session saves item only, bids cascaded
+        Session session = HibernateUtil.buildSessionFactory("create").openSession();
         Transaction transaction = session.beginTransaction();
 
         Item item = new Item();
@@ -32,26 +34,66 @@ public class ManyToOneOneToManyBidirectionalBidItemTBC {
         bids.add(bid1);
         bids.add(bid2);
         item.setBids(bids);
-//        session.save(item);
-
-        session.save(bid1);
-        session.save(bid2);
+        session.save(item);
 
         transaction.commit();
 
-        Transaction transaction2 = session.beginTransaction();
+        session.close();
+
+        // This session checks bidirectional navigation
+        Session session1 = HibernateUtil.buildSessionFactory("update").openSession();
+        Transaction transaction1 = session1.beginTransaction();
 
         // can navigate to a bid from an item
-        Item item1 = (Item) session.load(Item.class, 2);
+        Item item1 = (Item) session1.get(Item.class, 1);
         for (Object bid: item1.getBids()) System.out.println(((Bid)bid).getPrice());
 
         // can navigate to an item from a bid
-        Bid bid = (Bid) session.load(Bid.class, 1);
+        Bid bid = (Bid) session1.load(Bid.class, 2);
         System.out.println(bid.getItem().getItemName());
+
+        transaction1.commit();
+
+        session1.close();
+
+        // ############ Test 2 ###########
+        // This session bids only, item cascades
+        Session session2 = HibernateUtil.buildSessionFactory("create").openSession();
+        Transaction transaction2 = session2.beginTransaction();
+
+        Item item2 = new Item();
+        item2.setItemName("IC");
+
+        Bid bid3 = new Bid();
+        bid3.setPrice(1000);
+        bid3.setItem(item2);
+
+        Bid bid4 = new Bid();
+        bid4.setPrice(1200);
+        bid4.setItem(item2);
+
+        session2.save(bid3);
+        session2.save(bid4);
 
         transaction2.commit();
 
-        session.close();
+        session2.close();
+
+        // This session checks bidirectional navigation
+        Session session3 = HibernateUtil.buildSessionFactory("update").openSession();
+        Transaction transaction3 = session3.beginTransaction();
+
+        // can navigate to a bid from an item
+        Item item3 = (Item) session3.get(Item.class, 2);
+        for (Object bid5: item3.getBids()) System.out.println(((Bid)bid5).getPrice());
+
+        // can navigate to an item from a bid
+        Bid bid5 = (Bid) session3.load(Bid.class, 1);
+        System.out.println(bid5.getItem().getItemName());
+
+        transaction3.commit();
+
+        session3.close();
 
     }
 
@@ -116,9 +158,9 @@ public class ManyToOneOneToManyBidirectionalBidItemTBC {
     }
 
     private static class HibernateUtil {
-        private static final SessionFactory sessionFactory = buildSessionFactory();
+//        private static final SessionFactory sessionFactory = buildSessionFactory();
 
-        private static SessionFactory buildSessionFactory() {
+        private static SessionFactory buildSessionFactory(String hbm2ddlAuto) {
             try {
                 // Create the SessionFactory programmatically
                 return new AnnotationConfiguration()
@@ -128,7 +170,7 @@ public class ManyToOneOneToManyBidirectionalBidItemTBC {
                         .setProperty(Environment.PASS, "password")
                         .setProperty(Environment.DIALECT, "org.hibernate.dialect.Oracle10gDialect")
                         .setProperty(Environment.SHOW_SQL, "true")
-                        .setProperty(Environment.HBM2DDL_AUTO, "create")
+                        .setProperty(Environment.HBM2DDL_AUTO, hbm2ddlAuto)
 //                        .setProperty(Environment.HBM2DDL_AUTO, "update")
                         .addResource("ManyToOneOneToManyBidirectionalBidItem.xml")
                         .buildSessionFactory();
