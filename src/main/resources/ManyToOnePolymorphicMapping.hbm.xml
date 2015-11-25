@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="com.examples.xml.polymorphic" default-access="field" auto-import="false">
+    <!--<import class="ManyToOnePolymorphicMapping$User" rename="Y"/>-->
+
+    <!--<class name="ManyToOnePolymorphicMapping$User" table="USERS">-->
+    <class name="ManyToOnePolymorphicMapping$User" table="USERS">
+        <id name="userId" column="USER_ID" type="int">
+            <generator class="sequence">
+                <param name="sequence">seq</param>
+            </generator>
+        </id>
+        <many-to-one name="defaultBillingDetails"
+                     class="ManyToOnePolymorphicMapping$BillingDetails"
+                     column="DEFAULT_BILLING_DETAILS_ID" cascade="all" unique="true"/>
+    </class>
+
+    <class name="ManyToOnePolymorphicMapping$BillingDetails" table="BILLING_DETAILS" abstract="true">
+        <id name="billingDetailsId" column="BILLING_DETAILS_ID" type="int">
+            <generator class="sequence">
+                <param name="sequence">seq1</param>
+            </generator>
+        </id>
+        <union-subclass name="ManyToOnePolymorphicMapping$CreditCard" table="CREDIT_CARD"/>
+        <union-subclass name="ManyToOnePolymorphicMapping$BankAccount" table="BANK_ACCOUNT"/>
+    </class>
+</hibernate-mapping>
